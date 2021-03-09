@@ -88,8 +88,8 @@ module.exports = {
       const token = getToken(res);
 
       return {
-        ...user._doc,
-        id: user._id,
+        ...res._doc,
+        id: res._id,
         token,
       };
     },
