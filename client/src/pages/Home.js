@@ -3,26 +3,26 @@ import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
 import PostCard from "../components/PostCard";
-import { Grid } from "semantic-ui-react";
+import { Grid, Container, Header } from "semantic-ui-react";
 
 const Home = () => {
-  const {
-    loading,
-    data: { getPosts: posts },
-  } = useQuery(FETCH_POST_QUERY);
+  const { loading, error, data } = useQuery(FETCH_POST_QUERY);
 
+  //const { getPosts: posts } = data;
   return (
     <Grid columns={3}>
       <Grid.Row>
-        <h1>Recent Posts</h1>
+        <Container textAlign="center">
+          <Header size="huge">Recent Posts</Header>
+        </Container>
       </Grid.Row>
       <Grid.Row>
         {loading ? (
           <h1>Loading posts...</h1>
         ) : (
-          posts &&
-          posts.map((post) => (
-            <Grid.Column key={post.id}>
+          data &&
+          data.getPosts.map((post) => (
+            <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
               <PostCard post={post} />
             </Grid.Column>
           ))
