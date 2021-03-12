@@ -22,7 +22,7 @@ module.exports.registerInputValidator = (
   if (password === "") {
     errors.password = "La contraseña no puede estar vacía.";
   } else if (password !== confirmPassword) {
-    errors.password = "Las contraseñas deben de coincidir";
+    errors.confirPassword = "Las contraseñas deben de coincidir";
   }
 
   return {

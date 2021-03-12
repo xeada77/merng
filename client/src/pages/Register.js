@@ -1,44 +1,47 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
-import { Form, Button } from "semantic-ui-react";
+import { Form, Button, Container, Header } from "semantic-ui-react";
+
+import { AuthContext } from "../context/auth";
+import { useForm } from "../util/hooks";
 
 const Register = (props) => {
+  const context = useContext(AuthContext);
+
   const [errors, setErrors] = useState({});
 
-  const [values, setValues] = useState({
+  const initialState = {
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
-  });
+  };
+
+  const { onSubmit, onChange, values } = useForm(register, initialState);
 
   const [addUser, { loading }] = useMutation(REGISTER_USER, {
-    update(proxy, result) {
-      console.log(result);
+    update(proxy, { data: { register: userData } }) {
+      context.login(userData);
       props.history.push("/");
     },
     onError(err) {
-      console.log(err.graphQLErrors[0].extensions.exception.errors);
       setErrors(err.graphQLErrors[0].extensions.exception.errors);
     },
     variables: values,
   });
 
-  const onSubmit = (event) => {
-    event.preventDefault();
+  function register() {
     addUser();
-  };
-
-  const onChange = (event) => {
-    setValues({ ...values, [event.target.name]: event.target.value });
-  };
+  }
 
   return (
     <div className="form-container">
       <Form onSubmit={onSubmit} noValidate className={loading ? "loading" : ""}>
-        <h1>Register</h1>
+        <Container textAlign="center">
+          <Header size="huge">Register</Header>
+        </Container>
         <Form.Input
           label="Username"
           placeholder="Username.."
