@@ -11,11 +11,6 @@ function Home() {
   const { user } = useContext(AuthContext);
   const { loading, data } = useQuery(FETCH_POSTS_QUERY);
 
-  //const posts = data ? data.getPosts : [];
-
-  //const { getPosts: posts } = data;
-  console.log(data);
-
   if (loading) return <h1>Loading Posts....</h1>;
 
   return (
