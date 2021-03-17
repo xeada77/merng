@@ -1,18 +1,45 @@
-import React from "react";
-import { useQuery } from "@apollo/client";
+import React, { useContext, useState, useRef } from "react";
+import { useQuery, useMutation } from "@apollo/client";
+import {
+  Card,
+  Grid,
+  Image,
+  Comment,
+  Header,
+  Form,
+  Button,
+} from "semantic-ui-react";
+
+import moment from "moment";
 
 import { FETCH_POST_QUERY } from "../util/graphql";
-import { Card, Grid, Image } from "semantic-ui-react";
-import moment from "moment";
+import { CREATE_COMMENT_MUTATION } from "../util/graphql";
 import LikeButton from "../components/LikeButton";
 import CommentButton from "../components/CommentButton";
+import DeleteButton from "../components/DeleteButton";
+import { AuthContext } from "../context/auth";
 
 const SinglePost = (props) => {
   const postId = props.match.params.postId;
+  const { user } = useContext(AuthContext);
+
+  const [commentBody, setCommentBody] = useState("");
+  const commentInputRef = useRef(null);
 
   const { loading, error, data } = useQuery(FETCH_POST_QUERY, {
     variables: { postId: postId },
   });
+
+  const [submitComment] = useMutation(CREATE_COMMENT_MUTATION, {
+    variables: { postId, body: commentBody },
+    update() {
+      setCommentBody("");
+    },
+  });
+
+  const deleteButtonCallBack = () => {
+    props.history.push("/");
+  };
 
   let postMarkup;
 
@@ -39,7 +66,7 @@ const SinglePost = (props) => {
           <Grid.Column width={2}>
             <Image
               floated="right"
-              size="mini"
+              size="big"
               src="https://react.semantic-ui.com/images/avatar/large/molly.png"
               circular
             />
@@ -50,13 +77,71 @@ const SinglePost = (props) => {
                 <Card.Header>{username}</Card.Header>
                 <Card.Meta>{moment(createdAt).fromNow()}</Card.Meta>
                 <Card.Description>{body}</Card.Description>
-                <hr />
               </Card.Content>
               <Card.Content extra>
                 <LikeButton post={{ id, likeCount, likes }} />
                 <CommentButton post={{ id, commentCount, comments }} />
+                {user && user.username === username && (
+                  <DeleteButton postId={id} callback={deleteButtonCallBack} />
+                )}
               </Card.Content>
             </Card>
+
+            <Comment.Group style={{ maxWidth: "none" }}>
+              <Header as="h3" dividing>
+                Comentarios
+              </Header>
+              {user && (
+                <Form onSubmit={submitComment}>
+                  <div className="ui action input fluid">
+                    <input
+                      type="text"
+                      placeholder="Añade un comentario..."
+                      value={commentBody}
+                      onChange={(e) => {
+                        setCommentBody(e.target.value);
+                      }}
+                      ref={commentInputRef}
+                    />
+                    <Button
+                      type="submit"
+                      content="Añadir Comentario"
+                      labelPosition="left"
+                      icon="edit"
+                      primary
+                      color="teal"
+                    />
+                  </div>
+                </Form>
+              )}
+
+              {comments.map((comment) => (
+                /* <Card fluid key={comment.id}>
+                <Card.Content>
+                  {user && user.username === comment.username && (
+                    <DeleteButton postId={id} commentId={comment.id} />
+                  )}
+                  <Card.Header>{comment.username}</Card.Header>
+                  <Card.Meta>{moment(comment.createdAt).fromNow()}</Card.Meta>
+                  <Card.Description>{comment.body}</Card.Description>
+                </Card.Content>
+              </Card> */
+
+                <Comment key={comment.id}>
+                  <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/matt.jpg" />
+                  <Comment.Content>
+                    {user && user.username === comment.username && (
+                      <DeleteButton postId={id} commentId={comment.id} />
+                    )}
+                    <Comment.Author as="a">{comment.username}</Comment.Author>
+                    <Comment.Metadata>
+                      <div>{moment(createdAt).fromNow()}</div>
+                    </Comment.Metadata>
+                    <Comment.Text>{comment.body}</Comment.Text>
+                  </Comment.Content>
+                </Comment>
+              ))}
+            </Comment.Group>
           </Grid.Column>
         </Grid.Row>
       </Grid>
