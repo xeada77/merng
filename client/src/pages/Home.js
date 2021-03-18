@@ -29,6 +29,9 @@ function Home() {
     <Grid columns={3}>
       <Grid.Row>
         <Container textAlign="center">
+          <Header size="huge">Mis Posts</Header>
+        </Container>
+        <Container textAlign="center">
           <Header size="huge">Recent Posts</Header>
         </Container>
       </Grid.Row>
