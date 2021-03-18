@@ -8,6 +8,9 @@ import {
   Header,
   Form,
   Button,
+  Divider,
+  Dimmer,
+  Loader,
 } from "semantic-ui-react";
 
 import moment from "moment";
@@ -34,6 +37,7 @@ const SinglePost = (props) => {
     variables: { postId, body: commentBody },
     update() {
       setCommentBody("");
+      commentInputRef.current.blur();
     },
   });
 
@@ -44,7 +48,11 @@ const SinglePost = (props) => {
   let postMarkup;
 
   if (loading) {
-    postMarkup = <h1>Loading....</h1>;
+    postMarkup = (
+      <Dimmer active inverted>
+        <Loader size="big">Cargando...</Loader>
+      </Dimmer>
+    );
   } else if (error) {
     postMarkup = <h2>Error...</h2>;
   } else {
@@ -110,6 +118,7 @@ const SinglePost = (props) => {
                       icon="edit"
                       primary
                       color="teal"
+                      disabled={commentBody === ""}
                     />
                   </div>
                 </Form>
@@ -126,20 +135,22 @@ const SinglePost = (props) => {
                   <Card.Description>{comment.body}</Card.Description>
                 </Card.Content>
               </Card> */
-
-                <Comment key={comment.id}>
-                  <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/matt.jpg" />
-                  <Comment.Content>
-                    {user && user.username === comment.username && (
-                      <DeleteButton postId={id} commentId={comment.id} />
-                    )}
-                    <Comment.Author as="a">{comment.username}</Comment.Author>
-                    <Comment.Metadata>
-                      <div>{moment(createdAt).fromNow()}</div>
-                    </Comment.Metadata>
-                    <Comment.Text>{comment.body}</Comment.Text>
-                  </Comment.Content>
-                </Comment>
+                <>
+                  <Comment key={comment.id}>
+                    <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/matt.jpg" />
+                    <Comment.Content>
+                      {user && user.username === comment.username && (
+                        <DeleteButton postId={id} commentId={comment.id} />
+                      )}
+                      <Comment.Author as="a">{comment.username}</Comment.Author>
+                      <Comment.Metadata>
+                        <div>{moment(createdAt).fromNow()}</div>
+                      </Comment.Metadata>
+                      <Comment.Text>{comment.body}</Comment.Text>
+                    </Comment.Content>
+                  </Comment>
+                  <Divider />
+                </>
               ))}
             </Comment.Group>
           </Grid.Column>
