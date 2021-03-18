@@ -35,7 +35,7 @@ function PostForm() {
   return (
     <>
       <Form onSubmit={onSubmit}>
-        <h2>Create a Post:</h2>
+        <h2>Crea un Post:</h2>
         <Form.Field>
           <Form.Input
             placeholder="Hi world!"
