@@ -32,6 +32,7 @@ function Home() {
           data.getPosts.filter((post) => post.username === user.username)
         );
       } else {
+        setMyPosts([]);
         setRecentPosts(data.getPosts);
       }
     }
