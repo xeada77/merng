@@ -16,6 +16,7 @@ import {
 import { FETCH_POSTS_QUERY } from "../util/graphql";
 
 function Home() {
+  console.log("Renderizando Home");
   const { user } = useContext(AuthContext);
   const { loading, data } = useQuery(FETCH_POSTS_QUERY);
 
@@ -23,6 +24,7 @@ function Home() {
   const [myPosts, setMyPosts] = useState([]);
 
   useEffect(() => {
+    console.log("ejecutando useeffect");
     if (data && data.getPosts) {
       if (user) {
         setRecentPosts(

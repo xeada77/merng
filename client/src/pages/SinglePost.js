@@ -125,32 +125,20 @@ const SinglePost = (props) => {
               )}
 
               {comments.map((comment) => (
-                /* <Card fluid key={comment.id}>
-                <Card.Content>
-                  {user && user.username === comment.username && (
-                    <DeleteButton postId={id} commentId={comment.id} />
-                  )}
-                  <Card.Header>{comment.username}</Card.Header>
-                  <Card.Meta>{moment(comment.createdAt).fromNow()}</Card.Meta>
-                  <Card.Description>{comment.body}</Card.Description>
-                </Card.Content>
-              </Card> */
-                <>
-                  <Comment key={comment.id}>
-                    <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/matt.jpg" />
-                    <Comment.Content>
-                      {user && user.username === comment.username && (
-                        <DeleteButton postId={id} commentId={comment.id} />
-                      )}
-                      <Comment.Author as="a">{comment.username}</Comment.Author>
-                      <Comment.Metadata>
-                        <div>{moment(createdAt).fromNow()}</div>
-                      </Comment.Metadata>
-                      <Comment.Text>{comment.body}</Comment.Text>
-                    </Comment.Content>
-                  </Comment>
+                <Comment key={comment.id}>
+                  <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/matt.jpg" />
+                  <Comment.Content>
+                    {user && user.username === comment.username && (
+                      <DeleteButton postId={id} commentId={comment.id} />
+                    )}
+                    <Comment.Author as="a">{comment.username}</Comment.Author>
+                    <Comment.Metadata>
+                      <div>{moment(createdAt).fromNow()}</div>
+                    </Comment.Metadata>
+                    <Comment.Text>{comment.body}</Comment.Text>
+                  </Comment.Content>
                   <Divider />
-                </>
+                </Comment>
               ))}
             </Comment.Group>
           </Grid.Column>

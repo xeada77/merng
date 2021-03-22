@@ -49,7 +49,6 @@ const DeleteButton = (props) => {
           <Icon name="trash" style={{ margin: 0 }} />
         </Button>
       </MyPopup>
-
       <Confirm
         open={confirmOpen}
         content={
