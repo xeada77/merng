@@ -19,7 +19,7 @@ const DeleteButton = (props) => {
     //refetchQueries: [{ query: FETCH_POSTS_QUERY }],
     update(cache) {
       setConfirmOpen(false);
-      if (props.commentId) {
+      if (!props.commentId) {
         const data = cache.readQuery({ query: FETCH_POSTS_QUERY });
         if (data) {
           const newCache = data.getPosts.filter((p) => p.id !== props.postId);
